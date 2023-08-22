@@ -86,7 +86,7 @@ Virtual environment (optional but recommended)
 
 ## Usage
 
-- start env if created
+- Start env if created
 - Start the development server:
 
 ```
@@ -98,11 +98,11 @@ Virtual environment (optional but recommended)
 ## Contributing:
 
 - Contributions are welcome! To contribute to LibPro, follow these steps:
-- 1.Fork the repository.
-- 2.Create a new branch for your feature or bug fix:
-- 3.git checkout -b feature/my-feature
-- 4.Commit your changes and push them to your fork.
-- 5.Create a pull request to the main branch of the original repository.
+  - 1.Fork the repository.
+  - 2.Create a new branch for your feature or bug fix:
+  - 3.git checkout -b feature/my-feature
+  - 4.Commit your changes and push them to your fork.
+  - 5.Create a pull request to the main branch of the original repository.
 
 ## TOUR
 

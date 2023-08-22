@@ -54,10 +54,6 @@ Virtual environment (optional but recommended)
 - 4.Commit your changes and push them to your fork.
 - 5.Create a pull request to the main branch of the original repositor
 
-## Library management application
-
-LibPro is a web-based library management application built using the Flask framework. It provides an intuitive and efficient way to manage library operations, including adding, updating, and searching for books, managing borrower information, and tracking book circulation. This README will guide you through the installation, setup, and usage of the LibPro application.
-
 ## Features
 
 - User-friendly web interface for library staff to manage books and borrowers
@@ -71,7 +67,7 @@ Python 3.6+
 Pip (Python package manager)
 Virtual environment (optional but recommended)
 
-## Clone the repository: 
+## Clone the repository:
 
 ```
  git clone [https://github.com/manishpawar662/LibPro.git]  

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}
+  Transactions
+{% endblock title %}
+{% block body %}
+<div class="container">
+  <div style="display:flex" class="my-2 container">
+    <a href="/addrecord/transactions" class="add btn btn-outline-dark btn-sm mx-1 my-1" type="button">Add Transaction</a>
+    <form style="width:fit-content" class="d-flex mx-1 my-1" method="POST" action="/search/transactions" role="search">
+      <input class="form-control me-2" name="searchitem"  id="searchtran" type="search" placeholder="Search transaction..." aria-label="Search">
+      <button class="btn btn-outline-dark"  type="submit">Search</button>
+    </form>
+    <a class="btn btn-outline-danger mx-2" href="/empty/transactions" type="button">Empty transaction(s)</a>
+  </div>
+    {% if message  %}
+      <ul class="flash-messages">
+        <li class="fs-5 bg-success-subtle">{{message}}</li>
+      </ul>  
+    {% endif %}
+    {% if error %}
+      <p class='error fs-4 bg-danger-subtle'><strong class=""></strong> {{ error }}
+    {% endif %}
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">SNO</th>
+            <th scope="col">Transactionid</th>
+            <th scope="col">Bookid</th>
+            <th scope="col">Memberid</th>
+            <th scope="col">Date issued</th>
+            <th scope="col">Date Returned</th>
+            <th scope="col">Rent Fee</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          {% for records in allrecords %}
+          <tr>
+            <th scope="row">{{loop.index}}</th>
+            <td>{{records.Transactionid}}</td>
+            <td>{{records.bookid}}</td>
+            <td>{{records.memberid}}</td>
+            <td>{{records.date_issued}}</td>
+            <td>{{records.date_returned}}</td>
+            <td>{{records.rent_fee}}</td>
+            <td>{{records.status}}</td>
+            <td>
+              <a href="/updaterecord/transactions/{{records.sno}}" class="btn btn-outline-dark btn-sm mx-1">Update</a>
+              <a href="/deleterecord/transactions/{{records.sno}}" class="btn btn-outline-danger btn-sm mx-1">Delete</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+</div>
+
+    
+{% endblock body %}
+{% block scriptblock %}
+  <script>
+    $('#transaction-nav').toggleClass('active')
+  </script>
+{% endblock scriptblock %}<script>

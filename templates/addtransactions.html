@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}
+  Addtran..
+{% endblock title %}
+{% block body %}
+      <div class="container my-3">
+      <h3>ADD Transactions(s)</h3>
+        <form action="/transactions" autocomplete="off" method="POST" class="forms">
+            <div class="mb-3">
+              <label for="transactionid" class="form-label">Transaction Id</label>
+              <input type="number" name="transactionid" class="form-control" id="transactionid">
+            </div>
+            <div class="mb-3">
+              <label for="bookid" class="form-label">Bookid</label>
+              <input list="bookidlist" type="number" name="bookid" class="form-control" id="bookid">
+              <datalist id='bookidlist'>
+                {% for books in allbooks  %}
+                <option value="{{books.bookid}}">{{books.bookid}}-{{books.title}}</option>              
+                {% endfor %}
+              </datalist>
+            </div>
+            <div class="mb-3">
+              <label for="memberid" class="form-label">Memberid</label>
+              <input type="number" name="memberid" class="form-control" list="memberidlist" id="memberid">
+              <datalist id='memberidlist'>
+                {% for member in allmembers  %}
+                <option value="{{member.memberid}}">{{member.memberid}}-{{member.name}} </option>              
+                {% endfor %}
+              </datalist>
+            </div>
+            <div class="date-class mb-3">
+              <label for="date_issued" class="form-label">Date issued</label>
+              <input type="date" name="date_issued" class="form-control mx-1" id="date_issued">
+              <label for="date_returned" class="form-label">Date Returned</label>
+              <input type="date" name="date_returned" class="form-control mx-1" id="date_issued">
+            </div>
+            <div class="mb-3">
+              <label for="rent_fee" class="form-label">Rent fee</label>
+              <input type="currency" name="rent_fee" class="form-control" id="rent_fee">
+            </div>
+            
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="status" id="paid" value="Paid" checked>
+              <label class="form-check-label" for="paid">
+                Paid
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="status" id="pending" value="Pending" checked>
+              <label class="form-check-label" for="pending">
+                Pending
+              </label>
+            </div>
+            <button type="submit" class="btn btn-dark">Submit</button>
+          </form>
+    </div>
+
+{% endblock body %}
+{% block scriptblock %}
+  <script>
+    $('#transaction-nav').toggleClass('active')
+
+  </script>
+{% endblock scriptblock %}<script>

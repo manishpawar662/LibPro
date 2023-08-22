@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}
+  Home
+{% endblock title %}
+{% block body %}
+<div class="container my-4">
+  <h1 class="text-center my-2">Welcome to our Library Management System</h1>
+  <div class="container text-center">   
+    <p class="lead">Explore our vast collection of books and resources.</p>
+    <a href="/books" class="btn btn-dark btn-lg">Browse Books</a>
+</div>
+
+  <center>
+    <img class="my-2" style="height:40%;width:40%" src="https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
+  </center>
+  <p class="lead text-center">Our library has a wide collection of books, journals, and magazines. You can search, borrow, and return books using our online system.</p>
+  <div class="row">
+      <div class="col-sm-4">
+          <h3>Search Books</h3>
+          <p>Use our online catalog to search for books by title, author, or subject.</p>
+      </div>
+      <div class="col-sm-4">
+          <h3>Borrow Books</h3>
+          <p>Once you find a book you want to borrow, you can reserve it online and pick it up at the library.</p>
+      </div>
+      <div class="col-sm-4">
+          <h3>Return Books</h3>
+          <p>When you're finished with a book, you can return it to the library or use our online system to renew it.</p>
+      </div>
+  </div>
+</div>
+<div class="jumbotron jumbotron-fluid">
+  
+</div>
+{% endblock body %}
+
+{% block scriptblock %}
+<script>
+  $('#home-nav').toggleClass('active')
+</script>  
+{% endblock scriptblock %}

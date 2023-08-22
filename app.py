@@ -310,4 +310,4 @@ def importbooks():
     return render_template('books.html',allbooks=allbooks,error=error,message=message)
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=False) 

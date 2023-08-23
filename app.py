@@ -183,11 +183,10 @@ def search(table):
             filter_condition=[column.contains(search) for column in allcolumns]
             allconditions=or_(*filter_condition)
             search_records = table_class.query.filter(allconditions).distinct().all()
-            print(search_records)
         return render_template(f'{table}.html',allrecords=search_records)
     return redirect(f'/{table}')
 
-#R-Read (routes)
+#R-Read and create
 @app.route('/<string:table>',methods=['GET','POST'])
 def view(table):
     record_class=globals().get(table.capitalize())

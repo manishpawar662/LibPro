@@ -21,8 +21,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-message=None
-error=None
 #Models
 class Books(db.Model):
     sno = db.Column(db.Integer, primary_key=True)
@@ -49,14 +47,18 @@ class Transactions(db.Model):
 
 @app.route('/addrecord/<string:table>',methods=['GET','POST'])
 def addrecord(table):
-    if f'table'=='transaction':
-        allTransaction=Transactions.query.all()
-        allbooks= Books.query.all()
-        allmembers=Members.query.all()
-        return render_template(f'add{table}.html',alltransaction=allTransaction,allbooks=allbooks,allmembers=allmembers)
-    return render_template(f'add{table}.html')
-    
-    
+    record_class=globals().get(table.capitalize())
+    if record_class is None:
+        flash("Invalid Operation",'error')
+        return render_template('index.html')
+    else:
+        if f'{table}'=='transactions':
+            allTransaction=Transactions.query.all()
+            allbooks= Books.query.all()
+            allmembers=Members.query.all()
+            return render_template(f'add{table}.html',alltransaction=allTransaction,allbooks=allbooks,allmembers=allmembers)
+        else:
+            return render_template(f'add{table}.html')
 
 #D-Delete
 @app.route('/deleterecord/<string:table>/<int:sno>',methods=['GET','POST'])
@@ -72,7 +74,6 @@ def deleterecord(table,sno):
 @app.route('/updaterecord/<string:table>/<int:sno>' or "/updaterecord",methods=['GET','POST'])
 @app.route('/updaterecord/<string:table>', methods=['GET', 'POST'])
 def updaterecord(table,sno):
-    error=None
     record_class=globals().get(table.capitalize())
     if sno!=None:
         if request.method=='POST':
@@ -132,19 +133,25 @@ def updaterecord(table,sno):
                 if(transaction.status!=old_status and transaction.status=="Pending"):
                     member= Members.query.filter_by(memberid=transaction.memberid).first()
                     member.outstanding_debt=str(int(member.outstanding_debt)+int(rent_fee))
+                    
+                    book= Books.query.filter_by(bookid=transaction.bookid).first()
+                    book.stock-=1
 
                 elif(transaction.status!=old_status and transaction.status=="Paid"):
                     member= Members.query.filter_by(memberid=transaction.memberid).first()
                     member.outstanding_debt=str(int(member.outstanding_debt)-int(rent_fee))
+                    
+                    book= Books.query.filter_by(bookid=transaction.bookid).first()
+                    book.stock+=1
                 else:
                     pass
                 db.session.add(transaction)
                 db.session.commit()
                 message="Transaction Updated successfully"
             else:
-                error="Something went wrong"
+                flash("Something went wrong",'error')
             allrecords=record_class.query.all()
-            return render_template(f'{table}.html',message=message,error=error,allrecords=allrecords)
+            return render_template(f'{table}.html',allrecords=allrecords)
     # print(f'update{name}.html')
     
     if record_class is None:
@@ -183,11 +190,11 @@ def search(table):
 #R-Read (routes)
 @app.route('/<string:table>',methods=['GET','POST'])
 def view(table):
-    error=None
     record_class=globals().get(table.capitalize())
     # inspector=inspect(record_class)
     if record_class is None:
-        error="Invalid Operation"
+        flash("Invalid Operation",'error')
+        return redirect('/')
         # print(f"Table class for '{name.capitalize()}' not found.")
     else:
         if request.method=="POST":
@@ -201,8 +208,6 @@ def view(table):
                 pass
         allrecords=record_class.query.all()
         return render_template(f'{table}.html',allrecords=allrecords)
-    return render_template(f'{table}.html',error=error)
-
 
 def books(request):
     if request.method=="POST":
@@ -231,16 +236,19 @@ def transactions(request):
         new_transaction= Transactions(Transactionid=Transactionid,bookid=bookid,memberid=memberid,date_issued=date_issued,date_returned=date_returned,rent_fee=rent_fee,status=status)
         
         member = Members.query.filter_by(memberid=memberid).first()
+        book = Books.query.filter_by(bookid=bookid).first()
         if((int(member.outstanding_debt)==500) or (int(member.outstanding_debt)+int(rent_fee)>500)):
-            flash('Cannot allow debt more than 500', 'error')
-            return redirect("/transactions")
+            flash('Member already has a debt 500','error')
+        elif book.stock<=0:
+            flash('Book not avaliable in stock','error')
         else:
-            if(status=="Pending"):
+            if status=="Pending":
                 member.outstanding_debt=str(int(member.outstanding_debt)+int(rent_fee))
+                book.stock-=1
                 db.session.add(member)
                 db.session.commit()
             else:
-                pass
+                book.stock+=1
             db.session.add(new_transaction)
             db.session.commit()
     allTransaction=Transactions.query.all()
@@ -276,6 +284,9 @@ def empty(name):
 @app.route('/',methods=['GET','POST'])
 def Home():
     return render_template('index.html')
+@app.route('/favicon.ico')
+def favicon():
+    return app.send_static_file('favicon.ico')  # Assuming 'favicon.ico' is in your static folder
 
 @app.route('/importbooks',methods=['GET','POST'])
 def importbooks(): 
@@ -285,7 +296,6 @@ def importbooks():
     books=data.get("message",[])
     count=0
     message=None
-    error=None
     for book in books:
         bookid=book.get('bookID')
         title=book.get('title')
@@ -302,12 +312,11 @@ def importbooks():
             count+=1
             
     if(count>0):
-        message=f'{count} Book(s) Imported Successfully'
-        print('count',count)
+        flash(f'{count} Book(s) Imported Successfully','success')
     else:
-        error="Book(s) Already Exist"
+        flash("Book(s) Already Exist",'error')
     allbooks= Books.query.all()
-    return render_template('books.html',allbooks=allbooks,error=error,message=message)
+    return render_template('books.html',allbooks=allbooks)
 
 if __name__ == '__main__':
-    app.run(debug=False) 
+    app.run(debug=True,port=8000) 

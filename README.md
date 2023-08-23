@@ -88,7 +88,7 @@ Virtual environment (optional but recommended)
 
 - Start env if created
   ```
-  env/Scripts/activate.bat```
+  env/Scripts/activate.bat
   ```
 - Start the development server:
 

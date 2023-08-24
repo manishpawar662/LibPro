@@ -9,15 +9,15 @@
       <form action="/members" method="POST" class="forms">
         <div class="mb-3">
           <label for="memberid" class="form-label">MemberID</label>
-          <input type="text" class="form-control" id="memberid" name="memberid">
+          <input required type="text" class="form-control" id="memberid" name="memberid">
         </div>
         <div class="mb-3">
           <label for="name" class="form-label">Member Name</label>
-          <input type="text" class="form-control" name="name" id="name">
+          <input required type="text" class="form-control" name="name" id="name">
         </div>
         <div class="mb-3">
           <label for="outstanding_debt" class="form-label">Outstanding Debt</label>
-          <input type="number" class="form-control" name="outstanding_debt" id="outstanding_debt">
+          <input required type="number" class="form-control" name="outstanding_debt" id="outstanding_debt">
         </div>
         <button type="submit" class="btn btn-dark">Submit</button>
       </form>

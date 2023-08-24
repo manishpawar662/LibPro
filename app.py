@@ -236,20 +236,23 @@ def transactions(request):
         
         member = Members.query.filter_by(memberid=memberid).first()
         book = Books.query.filter_by(bookid=bookid).first()
-        if((int(member.outstanding_debt)==500) or (int(member.outstanding_debt)+int(rent_fee)>500)):
-            flash('Member already has a debt 500','error')
-        elif book.stock<=0:
-            flash('Book not avaliable in stock','error')
-        else:
-            if status=="Pending":
-                member.outstanding_debt=str(int(member.outstanding_debt)+int(rent_fee))
-                book.stock-=1
-                db.session.add(member)
-                db.session.commit()
+        if book and member:
+            if((int(member.outstanding_debt)==500) or (int(member.outstanding_debt)+int(rent_fee)>500)):
+                flash('Member already has a debt 500','error')
+            elif book.stock<=0:
+                flash('Book not avaliable in stock','error')
             else:
-                book.stock+=1
-            db.session.add(new_transaction)
-            db.session.commit()
+                if status=="Pending":
+                    member.outstanding_debt=str(int(member.outstanding_debt)+int(rent_fee))
+                    book.stock-=1
+                    db.session.add(member)
+                    db.session.commit()
+                else:
+                    book.stock+=1
+                db.session.add(new_transaction)
+                db.session.commit()
+        else:
+            flash("Invalid BookID or MemberID",'error')
     allTransaction=Transactions.query.all()
     return render_template('transactions.html',allrecords=allTransaction)
 
@@ -283,9 +286,6 @@ def empty(name):
 @app.route('/',methods=['GET','POST'])
 def Home():
     return render_template('index.html')
-@app.route('/favicon.ico')
-def favicon():
-    return app.send_static_file('favicon.ico')  # Assuming 'favicon.ico' is in your static folder
 
 @app.route('/importbooks',methods=['GET','POST'])
 def importbooks(): 
@@ -300,8 +300,6 @@ def importbooks():
         title=book.get('title')
         author=book.get('authors')
         print(count)
-        # print(type(Books.query.filter_by(bookid=bookid).first()))
-        # if(Books.query.filter_by(bookid=bookid).first()):
         if(Books.query.filter_by(bookid=bookid).first()):
             pass
         else:
@@ -315,7 +313,7 @@ def importbooks():
     else:
         flash("Book(s) Already Exist",'error')
     allbooks= Books.query.all()
-    return render_template('books.html',allbooks=allbooks)
+    return render_template('books.html',allrecords=allbooks)
 
 if __name__ == '__main__':
     app.run(debug=True,port=8000) 

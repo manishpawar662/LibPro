@@ -8,19 +8,19 @@
     <form action="/books" method="POST" class="forms">
         <div class="mb-3">
           <label for="bookid" class="form-label">BookId</label>
-          <input type="text" class="form-control" name="bookid" id="bookid" aria-describedby="emailHelp">
+          <input required type="text" class="form-control" name="bookid" id="bookid" aria-describedby="emailHelp">
         </div>
         <div class="mb-3">
           <label for="title" class="form-label">Title</label>
-          <input type="text" class="form-control" name="title" id="title">
+          <input required type="text" class="form-control" name="title" id="title">
         </div>
         <div class="mb-3">
           <label for="author" class="form-label">Author</label>
-          <input type="text" class="form-control" name="author" id="author">
+          <input required type="text" class="form-control" name="author" id="author">
         </div>
         <div class="mb-3">
           <label for="stock" class="form-label">Stock</label>
-          <input type="integer" class="form-control" name="stock" id="stock">
+          <input required type="integer" class="form-control" name="stock" id="stock">
         </div>
         <button type="submit" class="btn btn-dark">Submit</button>
       </form>

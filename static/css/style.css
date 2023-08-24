@@ -1,0 +1,114 @@
+.forms{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+  }
+  .navbar{
+    overflow:visible;
+    position:fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    bottom: 10;
+    width: 100%; 
+    margin-bottom: 1ch;
+  }
+  .navbarl li a{
+    font-family:sans-serif;
+    position:initial;
+  }
+  .navbarl li a::after{
+    content:"";
+    background-color: rgb(255, 255, 255);
+    height: 2px;
+    width:100%;
+    display: block;
+    transition:0.2s;
+    transform: scale(0);
+    transform-origin:left ;
+  }
+  .navbarl li a:hover::after{
+    transform: scale(1);
+  }
+  .navbarl li.active a {
+    font-size: large;
+    transition: none;
+    font-weight:bolder;
+
+}
+  .navbarl li.active a:hover {
+    font-size: large;
+    transition: none;
+    font-weight: bold;
+}
+  .navbarl li.active a::after {
+    content: none;
+    background-color: transparent; 
+    height: 4px;
+    width: 100%;
+    transition: none;
+    transform: scale(0);
+    font-size: larger;
+}
+  .navbar-brand{
+    position:sticky;
+  }
+  .active{
+    color: rgb(255, 255, 255);
+    font-size: larger;
+  }
+  .active:after{
+    content:"";
+    background-color: rgb(255, 255, 255);
+    height: 4px;
+    width:100%;
+    display: block;
+    transform: scale(1);
+  }
+  .nav-item li a{
+    color: rgb(255, 255, 255);
+  }
+  .nav-item li a::after{
+    background-color: #000000;
+    height:4px;
+    width: 100%;
+    display: block;
+    content: "";
+    transition: 0.3s;
+    transform-origin: left;
+    transform: scale(0);
+    color: rgb(239, 239, 239);
+
+  }
+  .nav-item li a:hover::after{
+    transform:scale(1)
+  }
+  .date-class{
+    display: flex;
+  }
+  form label{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6{
+    font-weight:bolder;
+    font-stretch: expanded;
+  }
+  .messages {
+    list-style: none;
+    padding: 0;
+    font: bolder;
+    font-size: larger;
+    width: fit-content
+}
+
+.success {
+    background-color: rgb(80, 166, 80);
+}
+
+.info {
+  background-color: blue;
+}
+
+.warning {
+  background-color: orange;
+}
+
+.error {
+  background-color: rgb(212, 102, 102);
+}

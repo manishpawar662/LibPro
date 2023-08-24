@@ -15,7 +15,6 @@ app = Flask(__name__)
 app.secret_key = "my_secret_key"
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-# Define the new database URI
 db_uri = f'sqlite:///{os.path.join(BASE_DIR, "library.db")}'
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -49,7 +48,7 @@ class Transactions(db.Model):
 def addrecord(table):
     record_class=globals().get(table.capitalize())
     if record_class is None:
-        flash("Invalid Operation",'error')
+        flash("Invalid Operation",'warning')
         return render_template('index.html')
     else:
         if f'{table}'=='transactions':
@@ -67,9 +66,9 @@ def deleterecord(table,sno):
     record=record_class.query.filter_by(sno=sno).first()
     db.session.delete(record)
     db.session.commit()
-    message="1 record Deleted Successfully"
+    flash("1 record Deleted Successfully",'success')
     allrecords=record_class.query.all()
-    return render_template(f'{table}.html',allrecords=allrecords,message=message)
+    return redirect(f'{table}')
 #U-update
 @app.route('/updaterecord/<string:table>/<int:sno>' or "/updaterecord",methods=['GET','POST'])
 @app.route('/updaterecord/<string:table>', methods=['GET', 'POST'])
@@ -77,7 +76,6 @@ def updaterecord(table,sno):
     record_class=globals().get(table.capitalize())
     if sno!=None:
         if request.method=='POST':
-            # if "title" in request.form:
             if table=="books":
                 print("Book table")
                 bookid=request.form['bookid']
@@ -92,7 +90,7 @@ def updaterecord(table,sno):
                 book.stock=stock
                 db.session.add(book)
                 db.session.commit()
-                message="Book Updated successfully"
+                flash("Book Updated successfully",'success')
             elif table=="members":
                 print("Member table")
                 memberid=request.form['memberid']
@@ -105,7 +103,7 @@ def updaterecord(table,sno):
                 member.outstanding_debt=outstanding_debt
                 db.session.add(member)
                 db.session.commit()
-                message="Member Updated successfully"
+                flash("Member Updated successfully",'success')
             elif table=="transactions":
                 print("Transaction table")
                 Transactionid=request.form['transactionid']
@@ -147,22 +145,20 @@ def updaterecord(table,sno):
                     pass
                 db.session.add(transaction)
                 db.session.commit()
-                message="Transaction Updated successfully"
+                flash("Transaction Updated successfully",'success')
             else:
                 flash("Something went wrong",'error')
             allrecords=record_class.query.all()
             return render_template(f'{table}.html',allrecords=allrecords)
-    # print(f'update{name}.html')
-    
+    #If there is no sno then update page is requested
     if record_class is None:
-        # print(f"Table class for '{name.capitalize()}' not found.")
-        return render_template(f'update{table}.html', record=record)
+        flash("Invalid operation",'warning')
+        return redirect('/')
     else:
-        # print(f"Table class for '{name.capitalize()}' found.")
         record = record_class.query.filter_by(sno=sno).first()
         if record is None:
-            # print("No record found for the specified sno.")
-            return render_template(f'update{table}.html', record=record)
+            flash('Invalid record','warning')
+            return redirect('/')
         else:
             inspecter= inspect(record)
             if hasattr(record, "date_issued")  and hasattr(record, "date_returned") :
@@ -192,7 +188,7 @@ def view(table):
     record_class=globals().get(table.capitalize())
     # inspector=inspect(record_class)
     if record_class is None:
-        flash("Invalid Operation",'error')
+        flash("Invalid Operation",'warning')
         return redirect('/')
         # print(f"Table class for '{name.capitalize()}' not found.")
     else:
@@ -204,7 +200,7 @@ def view(table):
             elif f'{table}'== "transactions":
                 transactions(request)
             else:
-                pass
+                flash("Invalid Operation",'info')
         allrecords=record_class.query.all()
         return render_template(f'{table}.html',allrecords=allrecords)
 
@@ -238,9 +234,9 @@ def transactions(request):
         book = Books.query.filter_by(bookid=bookid).first()
         if book and member:
             if((int(member.outstanding_debt)==500) or (int(member.outstanding_debt)+int(rent_fee)>500)):
-                flash('Member already has a debt 500','error')
+                flash('Member cannot have debt more than 500','warning')
             elif book.stock<=0:
-                flash('Book not avaliable in stock','error')
+                flash('Book not avaliable in stock','warning')
             else:
                 if status=="Pending":
                     member.outstanding_debt=str(int(member.outstanding_debt)+int(rent_fee))
@@ -252,7 +248,7 @@ def transactions(request):
                 db.session.add(new_transaction)
                 db.session.commit()
         else:
-            flash("Invalid BookID or MemberID",'error')
+            flash("Invalid BookID or MemberID",'warning')
     allTransaction=Transactions.query.all()
     return render_template('transactions.html',allrecords=allTransaction)
 
@@ -268,20 +264,33 @@ def members(request):
     return render_template('members.html',allrecords=allmembers)
 
 #empty
-@app.route('/empty/<string:name>',methods=['GET','POST'])
-def empty(name):
+@app.route('/empty/<string:table>',methods=['GET','POST'])
+def empty(table):
     inspecter=inspect(db.engine)
-    if inspecter.has_table(name):
-        table_class = globals().get(name.capitalize())
+    if inspecter.has_table(table):
+        table_class = globals().get(table.capitalize())
         
         if table_class is not None:
-            # Delete all records from the specified table
+            
+            print(table_class)
+            if table=='transactions':
+                print("Its transaction")
+                members=Members.query.all()
+                for member in members:
+                    member.outstanding_debt=0
+                    db.session.add(member)
+                    db.session.commit()
+                transaction=Transactions.query.all()
+                for record in transaction:
+                    book=Books.query.filter_by(bookid=record.bookid).first()
+                    book.stock+=1     
             table_class.query.delete()
             db.session.commit()
-            message = f"All records in the '{name}' table have been deleted."
+            flash(f"All records in the '{table}' table have been deleted.",'info')
         else:
-            message = f"Table class for '{name}' not found."
-    return render_template(f'{name}'+'.html',message=message)
+            flash(f"Table class for '{table}' not found.",'error')
+            redirect('/')
+    return redirect(f'/{table}')
 
 @app.route('/',methods=['GET','POST'])
 def Home():
@@ -294,7 +303,6 @@ def importbooks():
     data=response.json()
     books=data.get("message",[])
     count=0
-    message=None
     for book in books:
         bookid=book.get('bookID')
         title=book.get('title')
@@ -311,9 +319,9 @@ def importbooks():
     if(count>0):
         flash(f'{count} Book(s) Imported Successfully','success')
     else:
-        flash("Book(s) Already Exist",'error')
+        flash("Book(s) Already Exist",'warning')
     allbooks= Books.query.all()
-    return render_template('books.html',allrecords=allbooks)
+    return redirect('/books')
 
 if __name__ == '__main__':
     app.run(debug=True,port=8000) 

@@ -4,14 +4,17 @@
 
 LibPro is a web-based library management application built using the Flask framework. It provides an intuitive and efficient way to manage library operations, including adding, updating, and searching for books, managing borrower information, and tracking book circulation. This README will guide you through the installation, setup, and usage of the LibPro application.
 
+
+## Demo
+
+- Enter 52.66.180.77 in URL
+- http://manishpawar123.pythonanywhere.com/
+
 ## Features
 
 - User-friendly web interface for library staff to manage books and borrowers
 - Add, update, and delete books along with their details (title, author, genre, etc.)
-- Manage borrower information and track book circulation. Robust search functionality to quickly find books by various criteria.
-- Link for demo:
-  - Enter 52.66.180.77 in URL
-  - http://manishpawar123.pythonanywhere.com/
+- Manage borrower information and track book circulation. Robust search functionality to quickly find books by various criteria.Demo
 
 ## Prerequisites
 

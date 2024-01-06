@@ -46,7 +46,7 @@ Virtual environment (optional but recommended)
     flask run or python app.py
 ```
 
-- Open a web browser and navigate to[http://127.0.0.1:5000](http://127.0.0.1:5000/) to access the LibPro application.
+- Open a web browser and navigate to [http://127.0.0.1:5000](http://127.0.0.1:5000/) to access the LibPro application.
 
 ## Contributing:
 
@@ -56,59 +56,6 @@ Virtual environment (optional but recommended)
 - 3.git checkout -b feature/my-feature
 - 4.Commit your changes and push them to your fork.
 - 5.Create a pull request to the main branch of the original repositor
-
-## Features
-
-- User-friendly web interface for library staff to manage books and borrowers
-- Add, update, and delete books along with their details (title, author, genre, etc.)
-- Manage borrower information and track book circulation. Robust search functionality to quickly find books by various criteria.
-
-## Prerequisites
-
-Before you begin, ensure you have the following prerequisites installed:
-Python 3.6+
-Pip (Python package manager)
-Virtual environment (optional but recommended)
-
-## Clone the repository:
-
-```
- git clone [https://github.com/manishpawar662/LibPro.git]  
- cd LibPro
-```
-
-## Set up a virtual environment (recommended):
-
-    virtalenv env # On Windows: env\Scripts\activate
-
-## Install the required dependencies:
-
-```
- pip install -r requirements.txt
-```
-
-## Usage
-
-- Start env if created
-  ```
-  env/Scripts/activate.bat
-  ```
-- Start the development server:
-
-```
-    flask run or python app.py
-```
-
-- Open a web browser and navigate to[http://127.0.0.1:5000](http://127.0.0.1:5000/) to access the LibPro application.
-
-## Contributing:
-
-- Contributions are welcome! To contribute to LibPro, follow these steps:
-  - Fork the repository.
-  - Create a new branch for your feature or bug fix:
-  - git checkout -b feature/my-feature
-  - Commit your changes and push them to your fork.
-  - Create a pull request to the main branch of the original repository.
 
 ## TOUR
 

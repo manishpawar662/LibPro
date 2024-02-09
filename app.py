@@ -68,7 +68,7 @@ def deleterecord(table,sno):
     db.session.commit()
     flash("1 record Deleted Successfully",'success')
     allrecords=record_class.query.all()
-    return redirect(f'{table}')
+    return redirect(f'/{table}')
 #U-update
 @app.route('/updaterecord/<string:table>/<int:sno>' or "/updaterecord",methods=['GET','POST'])
 @app.route('/updaterecord/<string:table>', methods=['GET', 'POST'])

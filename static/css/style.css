@@ -3,11 +3,12 @@
   }
   .navbar{
     overflow:visible;
-    position:fixed; /* Set the navbar to fixed position */
+    position:sticky; /* Set the navbar to fixed position */
     top: 0; /* Position the navbar at the top of the page */
     bottom: 10;
     width: 100%; 
     margin-bottom: 1ch;
+
   }
   .navbarl li a{
     font-family:sans-serif;

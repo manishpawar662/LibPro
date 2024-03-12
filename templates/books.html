@@ -8,10 +8,13 @@
   <div style="display:flex" class="container">
     <a href="/importbooks" class="add btn btn-outline-dark btn-sm mx-1 my-1" type="button">Import Books</a>
     <a href="/addrecord/books" class="add btn btn-outline-dark btn-sm mx-1 my-1" type="button">Add book</a>
-    <form style="width:fit-content" class="d-flex mx-1 my-1" method="POST" action="/search/books" role="search">
-      <input class="form-control mx-2" name="searchitem"  id="searchbook" type="search" placeholder="Search Books..." aria-label="Search">
+    
+    <form style="width:fit-content" class="d-flex mx-1 my-1" method="POST" action="/search/books" role="search" id="searchForm">
+      <input class="form-control mx-2" name="searchitem" oninput="submitSearchForm()"  id="searchbook"  type="search" placeholder="Search Books..." aria-label="Search"
+      {% if pendingvalue %} value="{{pendingvalue}}" {% endif %}>
       <button class="btn btn-outline-dark"  type="submit">Search</button>
     </form>
+    
     <a class="btn btn-outline-danger mx-2" href="/empty/books" type="button">Empty</a>
   </div>
   
@@ -23,43 +26,39 @@
           {% endfor %}
       </ul>
   {% endif %}
-{% endwith %}
-    <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">SNO</th>
-            <th scope="col">BookID</th>
-            <th scope="col">Title</th>
-            <th scope="col">Author</th>
-            <th scope="col">Stock</th>
-            <th scope="col">Actions</th>
-
-          </tr>
-        </thead>
-        <tbody class="table-group-divider">
-          {% for records in allrecords  %}
-          <tr>
-            <th scope="row">{{loop.index}}</th>
-            <td>{{records.bookid}}</td>
-            <td>{{records.title}}</td>
-            <td>{{records.author}}</td>
-            <td>{{records.stock}}</td>
-            <td>
-              <a href="/updaterecord/books/{{records.sno}}" type="button" class="btn btn-outline-dark btn-sm mx-1 my-1">Update</a>
-              <a href="/deleterecord/books/{{records.sno}}" type="button" class="btn btn-outline-danger btn-sm mx-1">Delete</a>
+  {% endwith %}
+  
+  <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">SNO</th>
+          <th scope="col">BookID</th>
+          <th scope="col">Title</th>
+          <th scope="col">Author</th>
+          <th scope="col">Stock</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for records in allrecords  %}
+        <tr>
+          <th scope="row">{{loop.index}}</th>
+          <td>{{records.bookid}}</td>
+          <td>{{records.title}}</td>
+          <td>{{records.author}}</td>
+          <td>{{records.stock}}</td>
+          <td>
+            <a href="/updaterecord/books/{{records.sno}}" type="button" class="btn btn-outline-dark btn-sm mx-1 my-1">Update</a>
+            <a href="/deleterecord/books/{{records.sno}}" type="button" class="btn btn-outline-danger btn-sm mx-1">Delete</a>
           </td>
-          </tr>  
-          {% endfor %}
-          
-        </tbody>
-      </table>
+        </tr>  
+        {% endfor %}
+      </tbody>
+    </table>
 </div>
 
-    
-{% endblock body %}
-
-{% block scriptblock %}
 <script>
-  $('#books-nav').toggleClass('active')
-</script>  
-{% endblock scriptblock %}
+    $('#books-nav').toggleClass('active');
+</script>
+
+{% endblock body %}

@@ -13,7 +13,9 @@
         </div>
         <div class="mb-3">
           <label for="outstanding_debt" class="form-label">Outstanding Debt</label>
-          <input required type="text" value="{{record.outstanding_debt}}" class="form-control" name="outstanding_debt" id="outstanding_debt">
+          <input type="hidden" name="outstanding_debt" value="{{ record.outstanding_debt }}">
+          <input required type="text" value="{{ record.outstanding_debt }}" class="form-control" disabled title="Update transaction to remove debt">
+
         </div>
         <button type="submit" class="btn btn-dark">Submit</button>
       </form>

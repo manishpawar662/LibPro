@@ -26,9 +26,9 @@
           <tr>
             <th scope="col">SNO</th>
             <th scope="col">Transactionid</th>
-            <th scope="col">Bookid</th>
-            <th scope="col">Memberid</th>
-            <th scope="col">Date issued</th>
+            <th scope="col">BookId</th>
+            <th scope="col">MemberId</th>
+            <th scope="col">Date Issued</th>
             <th scope="col">Date Returned</th>
             <th scope="col">Rent Fee</th>
             <th scope="col">Status</th>
@@ -41,9 +41,13 @@
             <th scope="row">{{loop.index}}</th>
             <td>{{records.Transactionid}}</td>
             <td>{{records.bookid}}</td>
-            <td>{{records.memberid}}</td>
-            <td>{{records.date_issued}}</td>
-            <td>{{records.date_returned}}</td>
+            <td
+            {% if members %}
+            title="{{members.name}}"
+            {% endif %}
+            >{{records.memberid}}</td>
+            <td>{{ records.date_issued.strftime('%Y-%m-%d') }}</td>
+            <td>{{ records.date_returned.strftime('%Y-%m-%d') }}</td>
             <td>{{records.rent_fee}}</td>
             <td>{{records.status}}</td>
             <td>

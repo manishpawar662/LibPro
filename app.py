@@ -191,7 +191,7 @@ def updaterecord(table,sno):
                 flash("Something went wrong",'error')
             allrecords=record_class.query.all()
             return redirect(f'/{table}')
-    #If there is no sno then update page is requested
+    #If there is no sno then update home page is redirected
     if record_class is None:
         flash("Invalid operation",'warning')
         return redirect('/')
@@ -231,7 +231,6 @@ def view(table):
     record_class=globals().get(table.capitalize())
     # inspector=inspect(record_class)
     if record_class is None:
-        flash("Invalid Operation",'warning')
         return redirect('/')
         # print(f"Table class for '{name.capitalize()}' not found.")
     else:

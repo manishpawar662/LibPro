@@ -6,7 +6,7 @@
 /library-env
 /env
 /newenv
-/.vscode
-/__pycache__
+.vscode/
+__pycache__/
 /key
 /key_pub

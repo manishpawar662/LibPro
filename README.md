@@ -32,7 +32,7 @@ Virtual environment (optional but recommended)
 
 ## Set up a virtual environment (recommended):
 
-    virtalenv env # On Windows: env\Scripts\activate
+    virtalenv env #To start env On Windows: env\Scripts\activate.bat
 
 ## Install the required dependencies:
 
@@ -42,14 +42,19 @@ Virtual environment (optional but recommended)
 
 ## Usage
 
-- start env if created
+- Start env if created
+
+```
+env\Scripts\activate.bat
+```
+
 - Start the development server:
 
 ```
     flask run or python app.py
 ```
 
-- Open a web browser and navigate to [http://127.0.0.1:5000](http://127.0.0.1:5000/) to access the LibPro application.
+- Open a web browser and navigate to [http://127.0.0.1:3000](http://127.0.0.1:3000/) to access the LibPro application.
 
 ## Contributing:
 

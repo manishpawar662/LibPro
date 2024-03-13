@@ -1,0 +1,105 @@
+Certainly! Here are the answers to the questions respectively:
+
+1. **Why did you choose SQLite for your database? 
+How would you change the database URI if you were using a different database, like PostgreSQL?**
+   - I chose SQLite for its simplicity and ease of use, especially for small-scale applications. 
+   If I were using a different database like PostgreSQL, I would change the database URI to 
+   point to the PostgreSQL server. The URI format for PostgreSQL would be something like 
+   `postgresql://username:password@hostname/database_name`.
+
+2. **How do you ensure that member IDs and transaction IDs are unique? Can you explain the 
+purpose of the `stock` column in the Books model?**
+   - I ensure that member IDs and transaction IDs are unique by defining them as primary keys 
+   in their respective models (`Members` and `Transactions`). This ensures that each ID is 
+   unique across the table. The `stock` column in the `Books` model represents the quantity 
+   of books available in stock. It helps track the availability of books and prevent overselling.
+
+3. **How would you handle errors when adding, updating, or deleting records? Can you explain 
+the purpose of the `empty` route?**
+   - To handle errors when adding, updating, or deleting records, I would use try-except blocks 
+   to catch any exceptions that may occur during database operations. For example, if adding a 
+   new record fails due to a unique constraint violation, I would catch the exception and 
+   display an appropriate error message to the user. The purpose of the `empty` route is to 
+   delete all records from a specified table. It can be used to clear the database table when 
+   needed, such as during testing or when resetting the database.
+
+4. **How do you ensure that a member cannot have a debt exceeding 500? How would you handle 
+concurrency issues when adding new records?**
+   - To ensure that a member cannot have a debt exceeding 500, I would add a check in the 
+   `transactions` function before updating the member's outstanding debt. If adding a new 
+   transaction would cause the debt to exceed 500, I would prevent the transaction from being 
+   added and display an appropriate error message to the user. Concurrency issues when adding 
+   new records can be handled by using database transactions and locking mechanisms. 
+   For example, I could use a database transaction to ensure that only one transaction 
+   is being processed at a time, preventing concurrency issues.
+
+5. **How would you handle errors when fetching data from the external API? How often would you 
+trigger the import process?**
+   - I would handle errors when fetching data from the external API by checking the response 
+   status code and handling any errors accordingly. For example, if the API returns a 404 status 
+   code, indicating that the requested resource was not found, I would display an 
+   appropriate error message to the user. The frequency of triggering the import process 
+   would depend on the requirements of the application. It could be triggered manually by 
+   an administrator or scheduled to run at regular intervals using a cron job or a similar 
+   mechanism.
+
+
+1. **What is Frappe Framework, and what are its key features?**
+   - Frappe Framework is a full-stack web application framework used for building ERPNext and 
+    other web applications.
+   - Key features include a modular architecture, role-based permissions, a built-in UI 
+   framework (Frappe Desk), and extensive customization capabilities.
+
+2. **Explain the architecture of Frappe Framework, including its components and how they 
+interact.**
+   - The architecture is based on Python and MariaDB (or MySQL) and follows the 
+   Model-View-Controller (MVC) pattern.
+   - Components include DocTypes (data models), controllers (Python scripts), and 
+   templates (Jinja templates) that interact through the Frappe framework.
+
+3. **How does Frappe Framework handle authentication and permissions?**
+   - Frappe uses role-based permissions where roles are assigned to users, and permissions are 
+   set based on these roles.
+   - Authentication is handled through a username and password system.
+
+4. **What is the role of the Frappe Desk in the framework, and how does it simplify application 
+development?**
+   - The Frappe Desk is a user interface provided by the framework that includes modules for 
+   various applications (e.g., CRM, HR, Accounting).
+   - It simplifies application development by providing a standard interface for common business 
+   functions.
+
+5. **Explain the concept of DocTypes in Frappe Framework and how they are used to define data 
+structures.**
+   - DocTypes are data models used to define the structure of documents in the system 
+   (e.g., Customer, Sales Order).
+   - They define fields, validation rules, and relationships between documents.
+
+6. **How does Frappe Framework support customizations and extensions?**
+   - Frappe allows customizations through the creation of custom DocTypes, scripts, and 
+   templates.
+   - Extensions can be added through the use of custom apps and modules.
+
+7. **Describe the role of Jinja templates in Frappe Framework and how they are used to render 
+views.**
+   - Jinja templates are used to generate HTML views based on data from the backend.
+   - They allow for dynamic content generation and the inclusion of reusable components.
+
+8. **What is the Frappe Command Line Interface (CLI), and how is it used in application 
+development?**
+   - The CLI is a tool provided by Frappe for performing various development tasks, such as 
+   creating new apps, installing apps, and running development servers.
+   - It simplifies common development tasks and provides a consistent interface for developers.
+
+9. **How does Frappe Framework handle database operations, including queries and data 
+validation?**
+   - Frappe uses SQLAlchemy for database operations, which provides a high-level abstraction 
+   for working with databases.
+   - Data validation is performed using the Frappe framework, which provides built-in validation
+    rules for fields.
+
+10. **Explain the deployment process for applications built with Frappe Framework.**
+    - Applications built with Frappe can be deployed using Docker, Bench (Frappe's command-line 
+    tool), or manual setup on a server.
+    - Bench provides commands for setting up production environments, managing services, and 
+    deploying applications.

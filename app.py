@@ -5,7 +5,6 @@ from datetime import datetime
 import os
 import json
 import requests
-app = Flask(__name__)
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -58,32 +57,6 @@ def addrecord(table):
             return render_template(f'add{table}.html',alltransaction=allTransaction,allbooks=allbooks,allmembers=allmembers)
         else:
             return render_template(f'add{table}.html')
-
-#D-Delete
-@app.route('/deleterecord/<string:table>/<int:sno>',methods=['GET','POST'])
-def deleterecord(table,sno):
-    record_class=globals().get(table.capitalize())
-    record=record_class.query.filter_by(sno=sno).first()
-    if table=='members':
-        print("members deleting")
-        member = Members.query.filter_by(sno=sno).first()
-        print(member)
-        # book = Books.query.filter_by(bookid=bookid).first()
-        if member and ((int(member.outstanding_debt)>0)):
-            flash('Member cannot be deleted','error')
-            return redirect(f'/{table}')
-    elif table=='transactions':
-        transaction = Transactions.query.filter_by(sno=sno).first()
-        if transaction and ((str(transaction.status) == 'Pending')):
-            flash('Transaction status pending, cannot delete', 'error')
-            return redirect(f'/{table}')
-    else:
-        pass        
-    db.session.delete(record)
-    db.session.commit()
-    flash("1 record Deleted Successfully",'success')
-    allrecords=record_class.query.all()
-    return redirect(f'/{table}')
 #U-update
 @app.route('/updaterecord/<string:table>/<int:sno>' or "/updaterecord",methods=['GET','POST'])
 @app.route('/updaterecord/<string:table>', methods=['GET', 'POST'])
@@ -92,7 +65,7 @@ def updaterecord(table,sno):
     if sno!=None:
         if request.method=='POST':
             if table=="books":
-                print("Book table")
+                # print("Book table")
                 bookid=request.form['bookid']
                 title=request.form['title']
                 author=request.form['author']
@@ -107,7 +80,7 @@ def updaterecord(table,sno):
                 db.session.commit()
                 flash("Book Updated successfully",'success')
             elif table=="members":
-                print("Member table")
+                # print("Member table")
                 memberid=request.form['memberid']
                 name=request.form['name']
                 outstanding_debt=request.form['outstanding_debt']
@@ -120,7 +93,7 @@ def updaterecord(table,sno):
                 db.session.commit()
                 flash("Member Updated successfully",'success')
             elif table=="transactions":
-                print("Transaction table")
+                # print("Transaction table")
                 Transactionid=request.form['transactionid']
                 bookid=request.form['bookid']
                 memberid=request.form['memberid']
@@ -148,17 +121,21 @@ def updaterecord(table,sno):
                 transaction.status=status
                 member= Members.query.filter_by(memberid=transaction.memberid).first()
                 if member:
-                    print("rent fee",rent_fee)
-                    print("old rent",old_rent)
-                    print("are equal??--->",int(rent_fee)==(old_rent))
+                    # print("rent fee",rent_fee)
+                    # print("old rent",old_rent)
+                    print("are equal??--->",int(rent_fee)==int(old_rent))
                     if(int(rent_fee)!=int(old_rent)):
                         print("rents diff")
-                        print(status)
-                        print(old_status)
+                        # print(status)
+                        # print(old_status)
                         print(status!=old_status and status=="Pending")
                             # member.outstanding_debt=str(int(member.outstanding_debt)+int(rent_fee))
                         if(status!=old_status and status=="Pending"):
-                            member.outstanding_debt += int(transaction.rent_fee)
+                            print(f"debt is {member.outstanding_debt}")
+                            member.outstanding_debt -= int(old_rent)
+                            print(f"after subtracting debt is {member.outstanding_debt}")
+                            member.outstanding_debt += int(rent_fee)
+                            print(f"final debt is {member.outstanding_debt}")
                             book= Books.query.filter_by(bookid=transaction.bookid).first()
                             book.stock-=1
 
@@ -166,13 +143,17 @@ def updaterecord(table,sno):
                             member.outstanding_debt-=int(old_rent)
                             book= Books.query.filter_by(bookid=transaction.bookid).first()
                             book.stock+=1
+                        elif(status==old_status and status=="Paid"):
+                            pass
+                        elif(status==old_status and status=="Pending"):
+                            member.outstanding_debt -= int(old_rent)
+                            member.outstanding_debt += int(rent_fee)
                         else:
                             pass
-
                     elif(int(rent_fee)==int(old_rent)):
-                        print("rents same")
+                        # print("rents same")
                         if(status!=old_status and status=="Pending"):
-                            print("true")
+                            # print("true")
                             member.outstanding_debt+=int(rent_fee)
                             book= Books.query.filter_by(bookid=transaction.bookid).first()
                             book.stock-=1
@@ -180,10 +161,17 @@ def updaterecord(table,sno):
                             member.outstanding_debt-=int(rent_fee)
                             book= Books.query.filter_by(bookid=transaction.bookid).first()
                             book.stock+=1
+                        elif(status==old_status and status=="Paid"):
+                            pass
+                        elif(status==old_status and status=="Pending"):
+                            pass
                         else:
-                                pass
+                            pass
                     else:
                         pass
+                    if member.outstanding_debt>500:
+                        flash(f"Member {member.name} cannot have debt more than 500",'error')
+                        return redirect(f'/{table}')
                     db.session.add(transaction)
                     db.session.commit()
                     flash("Transaction Updated successfully",'success')
@@ -191,7 +179,7 @@ def updaterecord(table,sno):
                 flash("Something went wrong",'error')
             allrecords=record_class.query.all()
             return redirect(f'/{table}')
-    #If there is no sno then update home page is redirected
+    #If there is no sno then redirected to home page
     if record_class is None:
         flash("Invalid operation",'warning')
         return redirect('/')
@@ -207,6 +195,32 @@ def updaterecord(table,sno):
                 record.date_returned=record.date_returned.date()
                 
             return render_template(f'update{table}.html', record=record)
+#D-Delete
+@app.route('/deleterecord/<string:table>/<int:sno>',methods=['GET','POST'])
+def deleterecord(table,sno):
+    record_class=globals().get(table.capitalize())
+    record=record_class.query.filter_by(sno=sno).first()
+    if table=='members':
+        # print("members deleting")
+        member = Members.query.filter_by(sno=sno).first()
+        # print(member)
+        # book = Books.query.filter_by(bookid=bookid).first()
+        if member and ((int(member.outstanding_debt)>0)):
+            flash('Member cannot be deleted','error')
+            return redirect(f'/{table}')
+    elif table=='transactions':
+        transaction = Transactions.query.filter_by(sno=sno).first()
+        if transaction and ((str(transaction.status) == 'Pending')):
+            flash('Transaction status pending, cannot delete', 'error')
+            return redirect(f'/{table}')
+    else:
+        pass        
+    db.session.delete(record)
+    db.session.commit()
+    flash("1 record Deleted Successfully",'success')
+    allrecords=record_class.query.all()
+    return redirect(f'/{table}')
+
 #search
 @app.route('/search/<string:table>',methods=['GET','POST'])
 def search(table):
@@ -221,11 +235,11 @@ def search(table):
             filter_condition=[column.contains(search) for column in allcolumns]
             allconditions=or_(*filter_condition)
             search_records = table_class.query.filter(allconditions).distinct().all()
-            print(search_records)
+            # print(search_records)
         return render_template(f'{table}.html',allrecords=search_records,pendingvalue=search)
     return redirect(f'/{table}')
 
-#R-Read and create
+#R-Read
 @app.route('/<string:table>',methods=['GET','POST'])
 def view(table):
     record_class=globals().get(table.capitalize())
@@ -313,10 +327,7 @@ def empty(table):
         table_class = globals().get(table.capitalize())
         
         if table_class is not None:
-            
-            print(table_class)
             if table=='transactions':
-                print("Its transaction")
                 members=Members.query.all()
                 for member in members:
                     member.outstanding_debt=0
@@ -334,10 +345,6 @@ def empty(table):
             redirect('/')
     return redirect(f'/{table}')
 
-@app.route('/',methods=['GET','POST'])
-def Home():
-    return render_template('index.html')
-
 @app.route('/importbooks',methods=['GET','POST'])
 def importbooks(): 
     response=requests.get('https://frappe.io/api/method/frappe-library?page=2&title=and')
@@ -349,7 +356,7 @@ def importbooks():
         bookid=book.get('bookID')
         title=book.get('title')
         author=book.get('authors')
-        print(count)
+        # print(count)
         if(Books.query.filter_by(bookid=bookid).first()):
             pass
         else:
@@ -364,6 +371,10 @@ def importbooks():
         flash("Book(s) Already Exist",'warning')
     allbooks= Books.query.all()
     return redirect('/books')
+
+@app.route('/',methods=['GET','POST'])
+def Home():
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True,port=8000)

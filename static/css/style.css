@@ -99,17 +99,21 @@
 }
 
 .success {
-    background-color: rgb(80, 166, 80);
+    background-color: rgba(0, 233, 0, 0.349);
 }
 
 .info {
-  background-color: blue;
+  background-color: rgba(0, 140, 255, 0.308);
 }
 
 .warning {
-  background-color: orange;
+  background-color: rgba(252, 165, 3, 0.342);
 }
 
 .error {
-  background-color: rgb(212, 102, 102);
+  background-color: rgba(255, 0, 0, 0.329);
+}
+.hidedatalist{
+  display: none;
+  opacity: 0;
 }

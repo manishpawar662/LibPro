@@ -5,22 +5,26 @@
 {% block body %}
     <div class="container">
       <h3>ADD Book(s)</h3>
-    <form action="/books" method="POST" class="forms">
+    <form action="/books" method="POST" class="forms" onsubmit="return validateconditionsbooks()">
         <div class="mb-3">
-          <label for="bookid" class="form-label">BookId</label>
-          <input required type="text" class="form-control" name="bookid" id="bookid" aria-describedby="emailHelp">
-        </div>
+          <label for="bookid"  class="form-label">BookId</label>
+          <input autocomplete="off" required type="number" list="bookidlist" class="form-control" name="bookid" id="bookid" placeholder="eg: 1234" aria-describedby="emailHelp" ></div>
+          <datalist class="hidedatalist" style="display: none !important;" id='bookidlist'>
+            {% for books in allbooks %}
+            <option value="{{books.bookid}}">{{books.bookid}}-[{{books.stock}}]-{{books.title}}</option>              
+            {% endfor %}
+          </datalist>
         <div class="mb-3">
           <label for="title" class="form-label">Title</label>
-          <input required type="text" class="form-control" name="title" id="title">
+          <input autocomplete="off" required type="text" class="form-control" name="title" placeholder="eg: Harry Potter" id="title">
         </div>
         <div class="mb-3">
           <label for="author" class="form-label">Author</label>
-          <input required type="text" class="form-control" name="author" id="author">
+          <input autocomplete="off"required type="text" class="form-control" placeholder="eg: JK Rowling" name="author" id="author">
         </div>
         <div class="mb-3">
-          <label for="stock" class="form-label">Stock</label>
-          <input required type="integer" class="form-control" name="stock" id="stock">
+          <label for="stock" type="integer" class="form-label" p>Stock</label>
+          <input autocomplete="off"required type="number" step="1" class="form-control"placeholder="eg: 100" name="stock" id="stock">
         </div>
         <button type="submit" class="btn btn-dark">Submit</button>
       </form>

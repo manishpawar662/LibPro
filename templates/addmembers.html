@@ -6,10 +6,15 @@
 
     <div class="container">
       <h3>ADD Members(s)</h3>
-      <form action="/members" method="POST" class="forms">
+      <form action="/members" method="POST" class="forms" onsubmit="return validateconditionsmembers()">
         <div class="mb-3">
           <label for="memberid" class="form-label">MemberID</label>
-          <input required type="text" class="form-control" id="memberid" name="memberid">
+          <input list="memberidlist" required type="number" class="form-control" id="memberid" name="memberid">
+          <datalist id='memberidlist'>
+            {% for member in allmembers  %}
+            <option value="{{member.memberid}}"><p style="display: none;">{{member.memberid}}</p></option>              
+            {% endfor %}
+          </datalist>
         </div>
         <div class="mb-3">
           <label for="name" class="form-label">Member Name</label>

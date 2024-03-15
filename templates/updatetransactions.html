@@ -9,7 +9,8 @@
       <form action="/updaterecord/transactions/{{record.sno}}" method="POST" class="forms">
           <div class="mb-3">
             <label for="transactionid" class="form-label">Transaction Id</label>
-            <input required type="number" value="{{record.Transactionid}}"  name="transactionid" class="form-control" id="transactionid">
+            <input type="hidden" name="transactionid" value="{{record.Transactionid}}"class="form-control" id="transactionid">
+            <input disabled required type="number" value="{{record.Transactionid}}"class="form-control">
           </div>
           <div class="mb-3">
             <label for="bookid" class="form-label">Bookid</label>
@@ -27,7 +28,7 @@
           </div>
           <div class="mb-3">
             <label for="rent_fee" class="form-label">Rent fee</label>
-            <input required type="currency" value="{{record.rent_fee}}" name="rent_fee" class="form-control" id="rent_fee">
+            <input required type="number" value="{{record.rent_fee}}" name="rent_fee" class="form-control" id="rent_fee">
           </div>
           
           <div class="form-check">

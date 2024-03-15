@@ -41,11 +41,7 @@
             <th scope="row">{{loop.index}}</th>
             <td>{{records.Transactionid}}</td>
             <td>{{records.bookid}}</td>
-            <td
-            {% if members %}
-            title="{{members.name}}"
-            {% endif %}
-            >{{records.memberid}}</td>
+            <td>{{records.memberid}}</td>
             <td>{{ records.date_issued.strftime('%Y-%m-%d') }}</td>
             <td>{{ records.date_returned.strftime('%Y-%m-%d') }}</td>
             <td>{{records.rent_fee}}</td>

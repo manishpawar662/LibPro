@@ -5,7 +5,8 @@
     <form action="/updaterecord/members/{{record.sno}}" method="POST" class="forms">
         <div class="mb-3">
           <label for="memberid" class="form-label">Memberid</label>
-          <input required type="text" value="{{record.memberid}}" class="form-control" name="memberid" id="memberid" aria-describedby="emailHelp">
+          <input type="hidden" name="memberid" value="{{ record.memberid }}">
+          <input required type="text" value="{{record.memberid}}" class="form-control" name="memberid" id="memberid" aria-describedby="emailHelp" disabled title="MemberID cannot be changed">
         </div>
         <div class="mb-3">
           <label for="name" class="form-label">members Name</label>

@@ -5,7 +5,8 @@
     <form action="/updaterecord/books/{{record.sno}}" method="POST" class="forms">
         <div class="mb-3">
           <label for="bookid" class="form-label">BookId</label>
-          <input required type="text" value="{{record.bookid}}" class="form-control" name="bookid" id="bookid" aria-describedby="emailHelp">
+          <input hidden required type="text" value="{{record.bookid}}" class="form-control" name="bookid" id="bookid" aria-describedby="emailHelp">
+          <input disabled required type="text" value="{{record.bookid}}" class="form-control" name="bookid" id="bookid" aria-describedby="emailHelp">
         </div>
         <div class="mb-3">
           <label for="title" class="form-label">title</label>

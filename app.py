@@ -50,13 +50,10 @@ def addrecord(table):
         flash("Invalid Operation",'warning')
         return render_template('index.html')
     else:
-        if f'{table}'=='transactions':
             allTransaction=Transactions.query.all()
             allbooks= Books.query.all()
             allmembers=Members.query.all()
-            return render_template(f'add{table}.html',alltransaction=allTransaction,allbooks=allbooks,allmembers=allmembers)
-        else:
-            return render_template(f'add{table}.html')
+            return render_template(f'add{table}.html',allTransaction=allTransaction,allbooks=allbooks,allmembers=allmembers)
 #U-update
 @app.route('/updaterecord/<string:table>/<int:sno>' or "/updaterecord",methods=['GET','POST'])
 @app.route('/updaterecord/<string:table>', methods=['GET', 'POST'])
@@ -81,17 +78,19 @@ def updaterecord(table,sno):
                 flash("Book Updated successfully",'success')
             elif table=="members":
                 # print("Member table")
-                memberid=request.form['memberid']
-                name=request.form['name']
-                outstanding_debt=request.form['outstanding_debt']
+                memberid = request.form['memberid']
+                name = request.form['name']
+                outstanding_debt = request.form['outstanding_debt']
                 
-                member= Members.query.filter_by(sno=sno).first()
-                member.memberid=memberid
-                member.name=name
-                member.outstanding_debt=outstanding_debt
+                member = Members.query.filter_by(memberid=memberid).first()
+
+                member.memberid = memberid
+                member.name = name
+                member.outstanding_debt = outstanding_debt
+
                 db.session.add(member)
                 db.session.commit()
-                flash("Member Updated successfully",'success')
+                flash("Member Updated successfully", 'success')
             elif table=="transactions":
                 # print("Transaction table")
                 Transactionid=request.form['transactionid']
@@ -108,6 +107,7 @@ def updaterecord(table,sno):
                 rent_fee=request.form['rent_fee']
 
                 transaction= Transactions.query.filter_by(Transactionid=Transactionid).first()
+
                 old_status=transaction.status
                 old_rent=transaction.rent_fee
                 # print("old rent fetched-->>>",old_rent)
@@ -206,7 +206,7 @@ def deleterecord(table,sno):
         # print(member)
         # book = Books.query.filter_by(bookid=bookid).first()
         if member and ((int(member.outstanding_debt)>0)):
-            flash('Member cannot be deleted','error')
+            flash('Member cannot be deleted due to unpaid debt','error')
             return redirect(f'/{table}')
     elif table=='transactions':
         transaction = Transactions.query.filter_by(sno=sno).first()
@@ -270,44 +270,48 @@ def books(request):
         db.session.add(books)
         db.session.commit()
         allbooks= Books.query.all()
+        flash("Book added successfully","success")
     return render_template('books.html',allrecords=allbooks)
 
 def transactions(request):
-    if request.method=="POST":
-        Transactionid=request.form['transactionid']
-        bookid=request.form['bookid']
-        memberid=request.form['memberid']
-        date_issued=request.form['date_issued']
-        date_returned=request.form['date_returned']
-        rent_fee=request.form['rent_fee']
-        status=request.form['status']
+    if request.method == "POST":
+        Transactionid = request.form.get('transactionid')
+        bookid = request.form.get('bookid')
+        memberid = request.form.get('memberid')
+        date_issued = request.form.get('date_issued')
+        date_returned = request.form.get('date_returned')
+        rent_fee = request.form.get('rent_fee')
+        status = request.form.get('status')
 
         date_issued = datetime.strptime(date_issued, '%Y-%m-%d')
         date_returned = datetime.strptime(date_returned, '%Y-%m-%d')
-        new_transaction= Transactions(Transactionid=Transactionid,bookid=bookid,memberid=memberid,date_issued=date_issued,date_returned=date_returned,rent_fee=rent_fee,status=status)
-        
+
         member = Members.query.filter_by(memberid=memberid).first()
         book = Books.query.filter_by(bookid=bookid).first()
+
         if book and member:
-            if((int(member.outstanding_debt)==500) or (int(member.outstanding_debt)+int(rent_fee)>500)):
-                flash('Member cannot have debt more than 500','warning')
-            elif book.stock<=0:
-                flash('Book not avaliable in stock','warning')
+            if int(member.outstanding_debt) == 500 or int(member.outstanding_debt) + int(rent_fee) > 500:
+                flash('Member cannot have debt more than 500', 'warning')
+            elif book.stock <= 0:
+                flash('Book not available in stock', 'warning')
             else:
-                if status=="Pending":
-                    member.outstanding_debt=str(int(member.outstanding_debt)+int(rent_fee))
-                    book.stock-=1
+                if status == "Pending":
+                    member.outstanding_debt = str(int(member.outstanding_debt) + int(rent_fee))
+                    book.stock -= 1
                     db.session.add(member)
-                    db.session.commit()
-                else:
-                    book.stock+=1
+                new_transaction = Transactions(Transactionid=Transactionid, bookid=bookid, memberid=memberid,
+                                               date_issued=date_issued, date_returned=date_returned,
+                                               rent_fee=rent_fee, status=status)
                 db.session.add(new_transaction)
                 db.session.commit()
+                flash("1 Transaction added successfully", "success")
+                return redirect('/transactions')
         else:
-            flash("Invalid BookID or MemberID",'warning')
-    allTransaction=Transactions.query.all()
-    return render_template('transactions.html',allrecords=allTransaction,members=members)
+            flash("Invalid BookID or MemberID", 'warning')
 
+    allTransaction = Transactions.query.all()
+    members = Members.query.all()
+    return render_template('transactions.html', allrecords=allTransaction, members=members)
 def members(request):
     if request.method=="POST":
         memberid=request.form['memberid']
@@ -316,6 +320,7 @@ def members(request):
         new_member= Members(memberid=memberid,name=name,outstanding_debt=outstanding_debt)
         db.session.add(new_member)
         db.session.commit()
+        flash("Member added successfully","success")
     allmembers=Members.query.all()
     return render_template('members.html',allrecords=allmembers)
 
@@ -369,7 +374,6 @@ def importbooks():
         flash(f'{count} Book(s) Imported Successfully','success')
     else:
         flash("Book(s) Already Exist",'warning')
-    allbooks= Books.query.all()
     return redirect('/books')
 
 @app.route('/',methods=['GET','POST'])
@@ -377,4 +381,4 @@ def Home():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    app.run(debug=True,port=8000)
+    app.run(debug=False,port=8000)

@@ -10,7 +10,7 @@
     <a href="/addrecord/books" class="add btn btn-outline-dark btn-sm mx-1 my-1" type="button">Add book</a>
     
     <form style="width:fit-content" class="d-flex mx-1 my-1" method="POST" action="/search/books" role="search" id="searchForm">
-      <input class="form-control mx-2" name="searchitem" oninput="submitSearchForm()"  id="searchbook"  type="search" placeholder="Search Books..." aria-label="Search"
+      <input class="form-control mx-2" name="searchitem" id="searchbook"  type="search" placeholder="Search Books..." aria-label="Search"
       {% if pendingvalue %} value="{{pendingvalue}}" {% endif %}>
       <button class="btn btn-outline-dark"  type="submit">Search</button>
     </form>

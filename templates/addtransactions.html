@@ -9,8 +9,8 @@
             <div class="mb-3">
               <label for="transactionid"  class="form-label">Transaction Id</label>
               <input required list="transactionidlist" type="number" name="transactionid" class="form-control" id="transactionid" >
-              <datalist id='transactionidlist' style="display: none;">
-                {% for transactions in allTransactions %}
+              <datalist id='transactionidlist'>
+                {% for transactions in allTransaction %}
                 <option value="{{transactions.Transactionid}}">{{transactions.Transactionid}}</option>              
                 {% endfor %}
               </datalist>

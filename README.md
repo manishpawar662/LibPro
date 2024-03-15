@@ -8,7 +8,7 @@ LibPro is a web-based library management application built using the Flask frame
 ## Demo
 
 - https://libpro-flaskapp.onrender.com/
-- https://manishpawar2289.pythonanywhere.com/
+<!-- - https://manishpawar2289.pythonanywhere.com/ -->
 
 ## Features
 

@@ -125,20 +125,11 @@ def updaterecord(table,sno):
                     # print("old rent",old_rent)
                     print("are equal??--->",int(rent_fee)==int(old_rent))
                     if(int(rent_fee)!=int(old_rent)):
-                        print("rents diff")
-                        # print(status)
-                        # print(old_status)
-                        print(status!=old_status and status=="Pending")
-                            # member.outstanding_debt=str(int(member.outstanding_debt)+int(rent_fee))
                         if(status!=old_status and status=="Pending"):
-                            print(f"debt is {member.outstanding_debt}")
-                            member.outstanding_debt -= int(old_rent)
-                            print(f"after subtracting debt is {member.outstanding_debt}")
                             member.outstanding_debt += int(rent_fee)
                             print(f"final debt is {member.outstanding_debt}")
                             book= Books.query.filter_by(bookid=transaction.bookid).first()
                             book.stock-=1
-
                         elif(status!=old_status and status=="Paid"):
                             member.outstanding_debt-=int(old_rent)
                             book= Books.query.filter_by(bookid=transaction.bookid).first()

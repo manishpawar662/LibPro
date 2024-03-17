@@ -6,7 +6,20 @@
 
 <div class="my-3 container">
   <div style="display:flex" class="container">
-    <a href="/importbooks" class="add btn btn-outline-dark btn-sm mx-1 my-1" type="button">Import Books</a>
+    <!-- <form style="width:fit-content" class="d-flex mx-1 my-1" method="POST" action="/importbooks" role="search" id="importform">
+      <input class="form-control mx-2" name="num_books" id="num_books"  type="text" placeholder="No of books.." aria-label="Search">
+      <input class="form-control mx-2" name="title" id="title"  type="text" placeholder="title" aria-label="Search"> -->
+      <!-- <input class="form-control mx-2" name="authors" id="authors"  type="text" placeholder="authors" aria-label="Search">
+      <input class="form-control mx-2" name="isbn" id="num_books"  type="text" placeholder="No of books.." aria-label="Search">
+      <input class="form-control mx-2" name="publisher" id="publisher"  type="text" placeholder="publisher" aria-label="Search">
+      <input class="form-control mx-2" name="page" id="page"  type="text" placeholder="page" aria-label="Search"> -->
+      <!-- <button class="btn btn-outline-dark"  type="submit">Import</button>
+    </form> -->
+    <form style="width:fit-content" class="d-flex mx-1 my-1" method="POST" action="/importbooks" role="search" id="importform">
+      <input class="form-control mx-2" name="num_books" id="num_books"  type="text" placeholder="No of books.." aria-label="Search">
+      <button class="btn btn-outline-dark"  type="submit">Import</button>
+    </form>
+    <!-- <a href="/importbooks" class="add btn btn-outline-dark btn-sm mx-1 my-1" type="button">Import Books</a> -->
     <a href="/addrecord/books" class="add btn btn-outline-dark btn-sm mx-1 my-1" type="button">Add book</a>
     
     <form style="width:fit-content" class="d-flex mx-1 my-1" method="POST" action="/search/books" role="search" id="searchForm">

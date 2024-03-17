@@ -341,30 +341,61 @@ def empty(table):
             redirect('/')
     return redirect(f'/{table}')
 
-@app.route('/importbooks',methods=['GET','POST'])
-def importbooks(): 
-    response=requests.get('https://frappe.io/api/method/frappe-library?page=2&title=and')
-    retry = Retry(connect=3, backoff_factor=0.5)
-    data=response.json()
-    books=data.get("message",[])
-    count=0
-    for book in books:
-        bookid=book.get('bookID')
-        title=book.get('title')
-        author=book.get('authors')
-        # print(count)
-        if(Books.query.filter_by(bookid=bookid).first()):
-            pass
+@app.route('/importbooks', methods=['POST'])
+def importbooks():
+    count = 0
+    exists=0
+    num_books = request.form.get('num_books')
+    try:
+        num_books = int(num_books)
+        if num_books <= 0:
+            raise ValueError("Number of books must be a positive integer.")
+    except ValueError as e:
+        flash(f'{e}', 'error')
+        return redirect('/books')
+
+    api_url = 'https://frappe.io/api/method/frappe-library?page=2&title=and'
+    try:
+        response = requests.get(api_url)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        data = response.json()
+        books = data.get('message', [])
+        
+        # Get the existing book IDs from the database
+        existing_book_ids = {book.bookid for book in Books.query.all()}
+        
+        for book in books:
+            bookid = book.get('bookID')
+            title = book.get('title')
+            author = book.get('authors')
+
+            existing_book = Books.query.filter_by(bookid=bookid).first()
+            if existing_book:
+                # Update the existing book's information
+                existing_book.title = title
+                existing_book.author = author
+                exists+=1
+            else:
+                # Insert a new book record
+                new_book = Books(bookid=bookid, title=title, author=author, stock=100)
+                db.session.add(new_book)
+                count += 1
+            if count == num_books:
+                break
+
+        db.session.commit()
+
+        if count > 0:
+            if count>exists:
+                flash(f"{count} books imported {exists} already exists", 'success')
+            else:   
+                flash(f"{count} books imported", 'success')
         else:
-            books =  Books(bookid=bookid,title=title,author=author)
-            db.session.add(books)
-            db.session.commit()
-            count+=1
-            
-    if(count>0):
-        flash(f'{count} Book(s) Imported Successfully','success')
-    else:
-        flash("Book(s) Already Exist",'warning')
+            flash("Max Books from API already added(Empty the books table to import again)", 'info')
+
+    except requests.exceptions.RequestException as e:
+        flash(f"Failed to import books: {e}", 'error')
+
     return redirect('/books')
 
 @app.route('/',methods=['GET','POST'])
